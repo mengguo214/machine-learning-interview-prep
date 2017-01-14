@@ -1,0 +1,100 @@
+\documentclass[twoside]{article}
+
+\usepackage{epsfig}
+\usepackage{fullpage}
+%\usepackage{pgfplots}
+\usepackage{subfigure}
+\usepackage{tikz}
+\usepackage{indentfirst}
+\usepackage{makeidx}
+\usepackage{longtable}
+\usepackage{pdflscape}
+\usepackage{graphicx}
+\usepackage[cmex10]{amsmath}
+\usepackage{amsthm,amssymb,mathrsfs}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{soul}
+\usepackage{cite}
+%\usepackage{apacite}
+%\usepackage{natbib}
+\usepackage{lineno}
+\usepackage{verbatim}
+\usepackage{bm}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{amsthm}
+\usepackage{array}
+%\usepackage[usenames,dvipsnames]{color}
+\usepackage{color,xcolor}
+\usepackage{framed}
+\usepackage{hyperref}
+\usepackage{caption}
+%\usepackage{algorithm}
+%\SetKwInOut{Parameter}{Parameter}
+%\usepackage{algorithm2e}
+\usepackage[linesnumbered,boxed]{algorithm2e}
+\usepackage{algpseudocode}
+
+\setlength{\oddsidemargin}{0.25 in}
+\setlength{\evensidemargin}{-0.25 in}
+\setlength{\topmargin}{-0.6 in}
+\setlength{\textwidth}{6.5 in}
+\setlength{\textheight}{8.5 in}
+\setlength{\headsep}{0.75 in}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0 in}
+\pagenumbering{gobble}
+
+\newcommand{\lecture}[4]{
+   \pagestyle{myheadings}
+   \thispagestyle{plain}
+   \newpage
+   \setcounter{page}{1}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{\vspace{2mm}
+    \hbox to 6.28in { {\bf Notes:~Probabilistic machine learning \hfill} }
+       \vspace{6mm}
+       \hbox to 6.28in { {\Large \hfill #1   \hfill} }
+       \vspace{6mm}
+       \hbox to 6.28in { {\it Lecturer: #2 \hfill Scribes: #3} }
+      \vspace{2mm}}
+   }
+   \end{center}
+   \markboth{#1}{#1}
+   \vspace*{4mm}
+}
+
+\begin{document}
+
+\lecture{Supplemental Material}{Incognito}{Jiali Lin}
+
+\section{Introduction}
+
+\clearpage
+\begin{thebibliography}{99}
+  \bibitem{mlapp} K. P. Murphy (2012). \emph{Machine Learning: a Probabilistic Perspective.} MIT Press.
+  \bibitem{web} B. Engelhardt (2015). Sparse Linear Models. \url{http://www.cs.princeton.edu/\%7Ebee/courses/scribe/lec_10_07_2013.pdf}.
+  \bibitem{web} J. Wright (2013). Lecture III: Algorithms. \url{http://www.ipam.ucla.edu/publications/gss2013/gss2013_11324.pdf}.
+  \bibitem{web} L. Han (2015). Gradient Descent and Proximal Gradient Descent. \url{http://www.hanlongfei.com/convex/2015/10/28/proximal}.
+  \bibitem{web} E.Sudderth (2012). Introduction to (Statistical) Machine Learning. \url{http://cs.brown.edu/courses/cs142/fall2013/lectures/2013-10-31_svmMargins.pdf}.
+  \bibitem{gpml} C. E. Rasmussen \& C. K. I. Williams (2006). \emph{Gaussian Processes for Machine Learning.} MIT Press.
+  \bibitem{web} K. P. Murphy (2012). Tutorial on Probabilistic Graphical Models. \url{https://users.soe.ucsc.edu/~niejiazhong/slides/murphy.pdf}
+  \bibitem{prml} C. Bishop (2006). \emph{Pattern recognition and machine learning.} Springer.
+  \bibitem{web} H. Zhu (2016). Advanced Topics in Bayesian Statistics. \url{http://www.apps.stat.vt.edu/zhu/teaching/2016/6474/}.
+  \bibitem{web} D. Stansbury (2012). Rejection Sampling. \url{https://theclevermachine.wordpress.com/2012/09/10/rejection-sampling/}.
+  \bibitem{web} B. T. Vincent (2015). Importance sampling Matlab demo. \url{http://www.inferencelab.com/importance-sampling-matlab-demo/}.
+  \bibitem{web} Y. Xu (2015). Monte-Carlo methods. \url{http://www-staff.it.uts.edu.au/~ydxu/ml_course/monte_carlo.pdf}.
+  \bibitem{web} M. I. Jordan(2004). DP Mixtures - Gibbs Sampling and Some Applications. \url{http://people.eecs.berkeley.edu/~jordan/courses/281B-spring04/lectures/dpmixtures2.pdf}.
+  \bibitem{web} K. P. Murphy (2012). Variational Bayesian EM for Gaussian mixture models. \url{http://www.cs.ubc.ca/~murphyk/Software/VBEMGMM/index.html}.
+  \bibitem{web} E. Chen (2012). Nonparametric Bayes and the Dirichlet Process. \url{http://blog.echen.me/2012/03/20/infinite-mixture-models-with-nonparametric-bayes-and-the-dirichlet-process/}.
+  \bibitem{web} Nietzsche on line  (2014). PRML scribe notes. \url{http://www.cnblogs.com/Nietzsche/archive/2015/01.html}.
+  \bibitem{web} S. Boyd, L. Vandenberghe  (2016). Convex Optimization. \url{http://www.stanford.edu/~boyd/cvxbook/}.
+  \bibitem{web} K. P. Murphy (2012). Tutorial on Probabilistic Graphical Models. \url{https://users.soe.ucsc.edu/~niejiazhong/slides/}.
+  \bibitem{web} K. P. Murphy (2012). Figures from ``Machine Learning: a Probabilistic Perspective". \url{http://people.cs.ubc.ca/~murphyk/MLbook/figReport-16-Aug-2012/pmlFigureCodeTable.html}.
+  \bibitem{web} C. Bishop (2006). Figures from ``Pattern recognition and machine learning". \url{https://www.microsoft.com/en-us/research/people/cmbishop/}.
+\end{thebibliography}
+
+\end{document}
