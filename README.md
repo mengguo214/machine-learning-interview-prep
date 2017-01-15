@@ -17,7 +17,7 @@ The repository follows the structure of two classical machine learning textbooks
 - [Graphical models](https://github.com/rain05680/MLaPP/tree/master/Slides)
 
 ## Software
-This repository contains many demos of different methods applied to many different kinds of data sets. The demos are listed [here](https://github.com/rain05680/MLaPP/tree/master/RDemo). The vast majority of the code is written in R and Julia.
+This repository contains many demos of different methods applied to many different kinds of data sets. The demos are listed [here](https://github.com/rain05680/MLaPP/tree/master/RDemo). The vast majority of the code is written in R and Julia. Both programs are math based. Julia (like Matlab) is the go-to for designing algorithms (e.g. matrix operations), while R is great for data analysis and statistics.
 
 ## Other resources
 
