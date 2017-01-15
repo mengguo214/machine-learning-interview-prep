@@ -36,7 +36,7 @@ This repository contains many demos of different methods applied to many differe
 - [MATLAB &reg;R / R Reference](https://cran.r-project.org/doc/contrib/Hiebeler-matlabR.pdf)
 - [MATLAB &reg;Primer](https://www.mathworks.com/help/pdf_doc/matlab/getstart.pdf)
 - [MATLAB tutorial](http://ubcmatlabguide.github.io/)
-- [R for MATLAB users](R for MATLAB users)
+- [R for MATLAB users](http://mathesaurus.sourceforge.net/octave-r.html)
 
 ## Disclaimer
 The above material is purely for self-study purposes and will not be published in any form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior written permission of original authors.
