@@ -8,10 +8,10 @@
 #   
 #   Posterior: mu, T|X ~ NormalGamma(muN, kappaN, tauN, betaN), where
 #     xm: mean(x)
+#     muN: (kappa0 * mu0 + N * xm) / kappaN
 #     kappaN: kappa0 + N
 #     tauN: tau0 + N / 2
 #     betaN: beta0 + 0.5 * sum((x - xm)^2) + (kappa0 * N *(xm - mu0)^2) / (2 * kappaN)
-#     muN: (kappa0 * mu0 + N * xm) / kappaN
 #
 #   Marginal Distributions:
 #   By construction, the marginal distribution over T is a gamma distribution.
@@ -34,6 +34,7 @@
 # 
 # Reference:
 #   https://en.wikipedia.org/wiki/Normal-gamma_distribution
+#   https://www.cs.ubc.ca/~murphyk/Papers/bayesGauss.pdf
 
 rm(list = ls())
 
@@ -102,14 +103,10 @@ dpmm_gibbs <- function(x, alpha, tau0, beta0, mu0, kappa0, nIter)
   #  C, a N x nIter matrix of cluster assignments
   
   N <- length(x)
-  logpost <- rep(1, 1, nIter)
   p <- rep(1, 1, N)
-  C <- matrix(data = NA, nrow = N, ncol = nIter)
-  c <-rep(1, 1, N)
-  m <- rep(0, 1, N)
-  m[1] <- N
-  logprior <- rep(1, 1, N)
-  loglik <- rep(1, 1, N)
+  C <- matrix(data = NA, nrow = N, ncol = nIter); c <-rep(1, 1, N)
+  m <- rep(0, 1, N); m[1] <- N
+  logpost <- rep(1, 1, nIter); logprior <- rep(1, 1, N); loglik <- rep(1, 1, N)
   ix <- 1:N
   
   for (i in 1:nIter)

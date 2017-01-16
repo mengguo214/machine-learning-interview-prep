@@ -21,7 +21,6 @@
 
 rm(list = ls())
 
-library(matlab)
 library(mvtnorm)
 
 mu <- matrix(c(-1, -1, 1, 1), nrow = 2,byrow = T);
@@ -44,11 +43,12 @@ kll <- klf;
 klr <- klf;
 
 for (i in 1:n1){
-  f1[i,] <- dmvnorm(cbind(repmat(x1[i], n2, 1), x2), mu[1, ], Sigma[, , 1]);
-  f2[i,] <- dmvnorm(cbind(repmat(x1[i], n2, 1), x2), mu[2, ], Sigma[, , 2]);
-  klf[i,] <- dmvnorm(cbind(repmat(x1[i], n2, 1), x2), matrix(c(0, 0), ncol = 1), SigmaKL);
-  kll[i,] <- dmvnorm(cbind(repmat(x1[i], n2, 1), x2), mu[1, ], Sigma[, , 1] * 0.6);
-  klr[i,] <- dmvnorm(cbind(repmat(x1[i], n2, 1), x2), mu[2, ], Sigma[, , 2]*  0.6);
+  #f1[i,] <- dmvnorm(cbind(kronecker(matrix(1,n2,1),x1[i]), x2), mu[1, ], Sigma[, , 1]);
+  f1[i,] <- dmvnorm(cbind(rep(x1[i], n2), x2), mu[1, ], Sigma[, , 1]);
+  f2[i,] <- dmvnorm(cbind(rep(x1[i], n2), x2), mu[2, ], Sigma[, , 2]);
+  klf[i,] <- dmvnorm(cbind(rep(x1[i], n2), x2), matrix(c(0, 0), ncol = 1), SigmaKL);
+  kll[i,] <- dmvnorm(cbind(rep(x1[i], n2), x2), mu[1, ], Sigma[, , 1] * 0.6);
+  klr[i,] <- dmvnorm(cbind(rep(x1[i], n2), x2), mu[2, ], Sigma[, , 2]*  0.6);
 }
 
 f <- f1 + f2;

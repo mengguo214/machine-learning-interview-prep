@@ -50,7 +50,7 @@ for (t in 1:T){
     Xs[, t] <- rnorm(N, mean =  0, sd = 1)
   }else{
     # propagate particles according to prior 
-    Xs[, t] <- rnorm(N, mean = phi  *Xs[, t-1], sd = S.v)    
+    Xs[, t] <- rnorm(N, mean = phi * Xs[, t-1], sd = S.v)    
   }
   logweight[, t] <- dnorm(y[t], mean = Xs[, t], sd = S.w, log = T)    
   

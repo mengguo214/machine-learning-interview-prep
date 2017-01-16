@@ -330,6 +330,7 @@ In the Figure, the green contours represent the exact posterior, which is Gaussi
         p(\bm{\theta}, \bm{z}_{1:N}|\mathcal{D}) \approx q (\bm{\theta})\prod_i q_i(\bm{z}_i)
     \end{equation}
     \item \textbf{Pros:} marginalizing out the parameters, we can compute a lower bound on the marginal likelihood (useful for model selection).
+    \item \textbf{Goal:} lower bound $\mathcal{L}$.
 \end{itemize} 
 \end{frame}
 
@@ -453,9 +454,12 @@ where $\alpha$ has components $\alpha_k$ given by $\alpha_k = \alpha_0 + N_k$.
 \end{frame}
 
 \begin{frame}{Derivation of $q(\theta)$ (variational M step) (cont'd)}
-Recall: $q (\bm{\mu}_k,\bm{\Lambda}_k) = q (\bm{\mu}_k|\bm{\Lambda}_k)q (\bm{\Lambda}_k)$. Thus
-\begin{equation}\small
-    q(\bm{\mu}_k, \bm{\Lambda}_k) = N (\bm{\mu}_k|\bm{m}_k, (\beta_k\bm{\Lambda}_k)^{-1}) W(\bm{\Lambda}_k|\bm{W}_k, \nu_k)
+Recall: 
+\begin{equation}
+    \begin{split}
+        q(\bm{\mu}_k, \bm{\Lambda}_k) & = q (\bm{\mu}_k|\bm{\Lambda}_k)q (\bm{\Lambda}_k)\\
+        & N (\bm{\mu}_k|\bm{m}_k, (\beta_k\bm{\Lambda}_k)^{-1}) W(\bm{\Lambda}_k|\bm{W}_k, \nu_k)
+    \end{split}
 \end{equation}
 
 where we defined

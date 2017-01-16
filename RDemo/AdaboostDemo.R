@@ -26,12 +26,12 @@ y.test <- test[, 61]
 x.test <- test[, 1:60]
 train.error <- rep(0, 50) 
 test.error <- rep(0, 50)
-f <- rep(0,130) 
-f.test <- rep(0,78)
+y.hat <- rep(0,130) 
+y.hat.test <- rep(0,78)
 i <- 1
 library(rpart)
 while(i <= 50){
-  w <- exp(-y*f)
+  w <- exp(-y*y.hat)
   w <- w/sum(w)
   fit <- rpart(y~., x, w, method = "class")
   g <- -1 + 2 * (predict(fit, x)[, 2] > .5) # make -1 or 1
@@ -39,10 +39,10 @@ while(i <= 50){
   e <- sum(w * (y * g < 0))
   alpha <- .5 * log((1 - e) / e)
   alpha <- 0.1*alpha  #change made for part b
-  f <- f + alpha * g
-  f.test <- f.test + alpha*g.test
-  train.error[i] <- sum(1 * f * y < 0)/130
-  test.error[i] <- sum(1 * f.test * y.test < 0)/78
+  y.hat <- y.hat + alpha * g
+  y.hat.test <- y.hat.test + alpha*g.test
+  train.error[i] <- sum(1 * y.hat * y < 0)/130
+  test.error[i] <- sum(1 * y.hat.test * y.test < 0)/78
   i <-i+1
 }
 

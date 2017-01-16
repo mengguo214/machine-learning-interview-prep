@@ -64,7 +64,7 @@ Consider the tree in Figure.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.4\textwidth]{regtree}
-\caption{The first node asks if $x_1$ is less than some threshold $t_1$. If yes, we then ask if x2 is less than some other threshold $t_2$. If yes, we are in the bottom left quadrant of space, $R_1$. If no, we ask if $x_1$ is less than $t_3$. And so on. The result of these axis parallel splits is to partition 2d space into 5 regions.}
+\caption{The first node asks if $x_1$ is less than some threshold $t_1$. If yes, we then ask if $x_2$ is less than some other threshold $t_2$. If yes, we are in the bottom left quadrant of space, $R_1$. If no, we ask if $x_1$ is less than $t_3$. And so on. The result of these axis parallel splits is to partition 2d space into 5 regions.}
 \end{figure}
 
 We can write the model in the following form
@@ -218,12 +218,12 @@ where $R_m$ is the $m$'th region, $w_m$ is the mean response in this region, and
     \begin{equation*}
         L_m(\phi) = \sum_{i=1}^N \exp[-\tilde{y}_i(f_{m-1}(\bm{x}) + \beta\phi(\bm{x}_i))] = \sum_{i=1}^N w_{i,m}\exp(-\beta\tilde{y}_i\phi(\bm{x}_i))
     \end{equation*}
-     where $w_{i,m} = \exp(-\tilde{y}_i(f_{m-1}(\bm{x}))$ is a weight applied to datacase $i$.
+     where $w_{i,m} = \exp(-\tilde{y}_i(f_{m-1}(\bm{x})))$ is a weight applied to datacase $i$.
     \item Rewrite this objective as follows
     \begin{equation*}
         \begin{split}
             L_m & = e^{-\beta} \sum_{\tilde{y}_i = \phi(\bm{x}_i)} w_{i,m} + e^\beta \sum_{\tilde{y}_i \neq \phi(\bm{x}_i)} w_{i,m} \\
-            & = (e^{\beta} - e^{-\beta} )\sum_{i=1}^N \mathbb{I}(\tilde{y}_i \neq \phi(\bm{x}_i)) + e^{-\beta}\sum_{i=1}^N w_{i,m}
+            & = (e^{\beta} - e^{-\beta} )\sum_{i=1}^N w_{i,m} \mathbb{I}(\tilde{y}_i \neq \phi(\bm{x}_i)) + e^{-\beta}\sum_{i=1}^N w_{i,m}
         \end{split}
     \end{equation*}
 \end{itemize}
@@ -256,7 +256,7 @@ The weights at the next iteration become
     \begin{split}
         w_{i,m+1} & = w_{i,m}e^{-\beta_m \tilde{y}_i\phi_m(\bm{x}_i)}\\
         & = w_{i,m}e^{\beta_m(2\mathbb{I}(\tilde{y}_i\neq\phi_m(\bm{x}_i))-1)}\\
-        & = w_{i,m}e^{2\beta_m2\mathbb{I}(\tilde{y}_i\neq\phi_m(\bm{x}_i))}e^{-\beta_m}
+        & = w_{i,m}e^{2\beta_m\mathbb{I}(\tilde{y}_i\neq\phi_m(\bm{x}_i))}e^{-\beta_m}
     \end{split}
 \end{equation*}
     

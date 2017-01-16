@@ -44,18 +44,18 @@ Virginia Tech}
 }
 
 \section{Latent variable models}
-\begin{frame}{Latent variable models (LVMs)}
+\begin{frame}{Latent Variable Models (LVMs)}
 \begin{itemize}
     \item \textbf{Graphial model:} model dependence between two variables by adding an edge between them.
     \item \textbf{Latent variable:} assume that the observed variables are correlated because they arise from a hidden common ``cause".
     \item \textbf{Pros 1}: LVMs have fewer parameters than models that directly represent correlation in the visible space.
     \item \textbf{Pros 2}: good for compression of $\bm{x}$.
-    \item \textbf{Cons}: Harder to fit than models with no latent variables.
+    \item \textbf{Cons}: harder to fit than models with no latent variables.
     %item \textbf{Probabilistic learning:} Estimate parameters of joint distribution $p(z,x)$ which maximize marginal probability $p(z)$.
 \end{itemize}
 \end{frame}
 
-\section{K-meansClustering}
+\section{K-means Clustering}
 \begin{frame}{K-Means Objective: Compression}
 \begin{itemize}
     \item Observed feature vectors: $\bm{x}_i\in\mathbb{R}^d, \quad i=1,\ldots,N$.
@@ -112,8 +112,8 @@ Objective function: $J(\bm{z},\bm{\mu}|\bm{x},K) = \sum_{k=1}^K \sum_{i=1}^N z_{
 \textbf{Initialization:} Choose random cluster centers $\bm{\mu}_{(0)}$
 \begin{itemize}
     \item Should be distinct (breaking symmetry) and in ``region" of data.
-    \item Common heuristic: Randomly pick $K$ data points.
-    \item K-Means++: Randomly pick $K$ widely separated data points.
+    \item Common heuristic: randomly pick $K$ data points.
+    \item K-Means++: randomly pick $K$ widely separated data points.
 \end{itemize}
 \textbf{Theoretical Guarantees:}
 \begin{itemize}
@@ -149,7 +149,7 @@ Objective function: $J(\bm{z},\bm{\mu}|\bm{x},K) = \sum_{k=1}^K \sum_{i=1}^N z_{
 \begin{itemize}
     \item Learning: 
     \begin{equation*}
-        \argmax_{\bm{\pi},\bm{\theta}} \log p(\bm{\pi}) + \log p(\bm{\theta}) + \sum_{i=1}^N \left[\sum_{z_i}p(z_i|\bm{\pi})p(\bm{x}_i|z_i,\bm{\theta})\right]
+        \argmax_{\bm{\pi},\bm{\theta}} \ln p(\bm{\pi}) + \ln p(\bm{\theta}) + \sum_{i=1}^N \left[\sum_{z_i}p(z_i|\bm{\pi})p(\bm{x}_i|z_i,\bm{\theta})\right]
     \end{equation*}
     \item No notion of training and test data: labels are never observed.
     \item As before, maximize posterior probability of model parameters.
@@ -159,6 +159,17 @@ Objective function: $J(\bm{z},\bm{\mu}|\bm{x},K) = \sum_{k=1}^K \sum_{i=1}^N z_{
         \item There is one hidden variable per observation, so cannot perfectly estimate even with infinite data.
     \end{itemize}
     \item Must use generative model (discriminative degenerates).
+    \item Learning is harder
+    \begin{itemize}
+        \item In fully observed iid settings, the log likelihood decomposes into a sum of local terms.
+        \begin{equation*}
+            \ell(\bm{\theta}) = \ln p(\bm{x},\bm{z}|\bm{\theta}) = \ln p(\bm{z}|\bm{\theta}_{\bm{z}}) + \ln p(\bm{x}|\bm{z},\bm{\theta}_{\bm{x}})
+        \end{equation*}
+        \item With latent variables, all the parameters become coupled together via marginalization
+        \begin{equation*}
+            \ell(\bm{\theta}) = \ln \sum p(\bm{x} , \bm{z}|\bm{\theta}) = \ln \sum p(\bm{z}|\bm{\theta}_{\bm{z}}) p(\bm{x}|\bm{z}, \bm{\theta}_{\bm{x}} )
+        \end{equation*}
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -210,11 +221,11 @@ of Gaussians.}
 \begin{frame}{Example: EM for Gaussian Mixtures}
 \begin{itemize}
     \item Initialize the means $\bm{\mu}_k$, covariances $\bm{\Sigma}_k$ and mixing coefficients $\pi_k$, and evaluate the initial value of the log likelihood.
-    \item \textbf{E step.} Evaluate the responsibilities using the current parameter values
+    \item \textbf{E step.} Evaluate the responsibilities (the expected value of the sufficient statistics of the hidden variables) using the current parameter values
         \begin{equation*}
             \gamma(z_{ik}) = p(z_i = k | \bm{x}_i, \bm{\pi}, \bm{\theta}) = \frac{\pi_k N(\bm{x}_n|\bm{\mu}_k,\bm{\Sigma}_k)}{\sum_{j=1}^K \pi_j N(\bm{x}_n|\bm{\mu}_j,\bm{\Sigma}_j) }
         \end{equation*}
-    \item \textbf{M step.} Re-estimate the parameters using the current responsibilities
+    \item \textbf{M step.} Re-estimate the parameters using the current responsibilities (i.e. expected value of the hidden variables)
         \begin{equation*}
             \begin{split}
                 \bm{\mu}_k^{\text{new}} & = \frac{1}{N_k}\sum_{n=1}^N\gamma(z_{ik})\bm{x}_n\\
@@ -236,6 +247,7 @@ of Gaussians.}
 \end{itemize}
 \end{frame}
 
+
 \begin{frame}{Illustration of EM Algorithm for GGM}
 \begin{figure}[h]
 \centering     %%% not \center
@@ -252,15 +264,15 @@ of Gaussians.}
 \begin{frame}{EM as Lower Bound Maximization}
 \begin{equation*}
     \begin{split}
-        \ln p(\bm{x}|\bm{\theta}) & = \ln (\sum_{\bm{z}} p(\bm{x},\bm{z}|\bm{\theta}))\\
-        \ln p(\bm{x}|\bm{\theta}) & \geq \sum_{\bm{z}} q(\bm{z}) \ln (\frac{p(\bm{x},\bm{z}|\bm{\theta})}{q(\bm{z})}) \quad\text{(Jensen's Inequality)}\\
-        \ln p(\bm{x}|\bm{\theta}) & \geq \sum_{\bm{z}} q(\bm{z}) \ln p(\bm{x},\bm{z}|\bm{\theta}) -\sum_{\bm{z}} q(\bm{z}) \ln q(\bm{z}) = L(q,\bm{\theta})
+        \ln p(\bm{x}|\bm{\theta}) & = \ln (\sum_{\bm{z}} p(\bm{x},\bm{z}|\bm{\theta})) = \ln (\sum_{\bm{z}} q(\bm{z}) \frac{p(\bm{x},\bm{z}|\bm{\theta}))}{q(\bm{z})}\\
+        & \geq \sum_{\bm{z}} q(\bm{z}) \ln (\frac{p(\bm{x},\bm{z}|\bm{\theta})}{q(\bm{z})}) \quad\text{(Jensen's Inequality)}\\
+        & \geq \sum_{\bm{z}} q(\bm{z}) \ln p(\bm{x},\bm{z}|\bm{\theta}) -\sum_{\bm{z}} q(\bm{z}) \ln q(\bm{z}) = L(q,\bm{\theta})
     \end{split}
 \end{equation*}
 
 \begin{itemize}
 \item Initialization: Randomly select starting parameters $\bm{\theta}_{(0)}$.
-\item Estimation: Given parameters, infer likely hidden data.
+\item Inference: Given parameters, infer likely hidden data.
     \begin{equation*}
         q^{(t)} = \argmax_q L(q,\bm{\theta}^{(t-1)})
     \end{equation*}
@@ -288,6 +300,10 @@ of Gaussians.}
     \end{split}
 \end{equation*}
 \begin{itemize}
+    \item One can also show this result using variational calculus
+    \begin{equation*}
+        \ln p(\bm{x}|\bm{\theta}) - \ln q(\bm{z}) = L(q,\bm{\theta}) = \text{KL}(q||p(\bm{z}|\bm{x},\bm{\theta}))
+    \end{equation*}
     \item General solution, for any probabilistic model
     \begin{equation*}
         q^{(t)} = \argmax_q L(q,\bm{\theta}^{(t-1)})

@@ -10,15 +10,19 @@
 #    Depts. of Statistics, Virginia Tech,
 #    Hutcheson Hall, 403K, Blacksburg, VA 24061 
 #
-# Source: 
+# Reference: 
 #   http://statistical-research.com/dirichlet-process-infinite-mixture-models-and-clustering/
+#   https://github.com/tbroderick/bnp_tutorial/tree/2016mlss
 
 rm(list = ls())
 
 crp <- function(num.customers, alpha) {
+  
   table <- 1
   next.table <- 2
+  
   for (i in 1:num.customers) {
+    
     if (runif(1, 0, 1) < alpha / (alpha + i)) {
       # Add a new ball color.
       table <- c(table, next.table)
@@ -29,12 +33,20 @@ crp <- function(num.customers, alpha) {
       select.table <- table[sample(1:length(table), 1)]
       table <- c(table, select.table)
     }
+    
+    # plot cluster assignments in order of appearance
+    K = unique(table)
+    plot(seq(1, i + 1), table,
+         xlab="Sample index", ylab="Cluster by order of appearance",
+         xlim=c(0,max(10,i)), ylim=c(0,max(10,length(table))),
+         pch=19, main=bquote(rho~"~Dirichlet"  # ~"("~.(a)~",...,"~.(a)~")"
+                             ~", K="~.(K))
+    )
+    
+    line <- readline()
+    if(line == "x") return("done")
   }
-  table
+  
 }
 
 crp(100, 4)
-
-plot(table(crp(100, 2)), 
-     xlab="Table Index", 
-     ylab="Frequency")

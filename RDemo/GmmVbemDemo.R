@@ -19,7 +19,7 @@
 rm(list = ls())
 
 if(!require("mixtools")) { install.packages("mixtools");  require("mixtools") }
-library(matlab)
+# library(matlab)
 
 GmmVbem = function(x, mix, PriorPar, options){
   # Variational Bayes EM algorithm for Gaussian Mixture Model 
@@ -86,7 +86,7 @@ GmmVbem = function(x, mix, PriorPar, options){
     const = D*log(2);
     
     for (k in 1:K){
-      t1 = psigamma(0.5*repmat(v[k]+1,D,1) - 0.5*matrix(1:D), 0);
+      t1 = psigamma(0.5*kronecker(matrix(1,D,1),v[k]+1)	 - 0.5*matrix(1:D), 0);
       logLambdaTilde[k] = sum(t1) + const + log(det(W[ , , k]));
       
       for (n in 1:N){
@@ -97,20 +97,20 @@ GmmVbem = function(x, mix, PriorPar, options){
     } # end of k
     
     # Calculate rho - CB 10.45 - 10.46
-    logRho = repmat(matrix(t(logPiTilde) + 0.5*logLambdaTilde),c(N,1)) - 0.5*E;
-    logSumRho = apply(logRho, 1, function(x) log(sum(exp(x)))); #?
-    logr = logRho - repmat(logSumRho, 1,K);
+    logRho = kronecker(matrix(1,N,1), t(logPiTilde) + 0.5*logLambdaTilde) - 0.5*E;
+    logSumRho = apply(logRho, 1, function(x) log(sum(exp(x))));
+    logr = logRho - kronecker(matrix(1,1,K),logSumRho);
     r = exp(logr);
     
     # compute N(k) - CB 10.51
-    Nk = exp(apply(logr, 2, function(x) log(sum(exp(x))))) # not matrix yet 15*1
+    Nk = exp(apply(logr, 2, function(x) log(sum(exp(x))))) 
     # add a non-zero term for the components with zero responsibilities
     Nk = Nk + 1e-10; 
     # compute xbar(k), S(k) - CB 10.52 - 10.53
     for (k in 1:K){
-      xbar[ ,k] = rowSums(repmat(matrix(t(r[,k])),c(D,1))*x)/Nk[k];
-      diff1 = x - repmat(xbar[,k],1,N);
-      diff2 = repmat(matrix(t(r[,k])),c(D,1))*diff1;
+      xbar[ ,k] = rowSums(kronecker(matrix(1,D,1),t(r[,k]))*x)/Nk[k];
+      diff1 = x - kronecker(matrix(1,1,N),xbar[,k]);
+      diff2 = kronecker(matrix(1,D,1),t(r[,k]))*diff1;
       S[, , k] = (diff2%*%t(diff1))/Nk[k];
     }
     
@@ -163,7 +163,7 @@ GmmVbem = function(x, mix, PriorPar, options){
     alpha = alpha0 + Nk;
     beta = beta0 + Nk;
     v = v0 + Nk;
-    m = (repmat(beta0*m0,1,K) + repmat(matrix(t(Nk)),c(D,1))*xbar)/repmat(matrix(t(beta)),c(D,1));
+    m = (kronecker(matrix(1,1,K),beta0*m0) + kronecker(matrix(1,D,1), t(Nk))*xbar)/kronecker(matrix(1,D,1),t(beta));
     for (k in 1:K) {
       mult1 = beta0*Nk[k]/(beta0 + Nk[k]);
       diff3 = xbar[,k] - m0;
@@ -201,8 +201,8 @@ plot(X)
 
 # standardize the data
 X = t(X)
-X = X - repmat(apply(X,1,mean),1,ncol(X));
-X = X/repmat(apply(X,1,var),1,ncol(X));
+X = X - kronecker(matrix(1,1,ncol(X)),apply(X,1,mean))	
+X = X / kronecker(matrix(1,1,ncol(X)),apply(X,1,var))	
 dim = dim(X)[1]
 N = dim(X)[2]
 
@@ -213,7 +213,7 @@ mix$ncentres = ncentres;
 mix$priors =  matrix(1,1,mix$ncentres)/ mix$ncentres;
 mix$centres = matrix(rnorm(mix$ncentres*dim,mean=0,sd=1), 
                      mix$ncentres, dim);
-mix$covars = repmat(diag(dim), c(1, 1, mix$ncentres));
+mix$covars = kronecker(array(1, c(1, 1, mix$ncentres)), diag(dim));	
 
 # intialize the priors
 PriorPar = list();

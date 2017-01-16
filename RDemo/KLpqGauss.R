@@ -38,14 +38,14 @@ x2 <- x1;
 n1 <- length(x1);
 n2 <- length(x2);
 
-f <- matrix(0, nrow = n1, ncol = n2); 
+f <- matrix(NA, nrow = n1, ncol = n2); 
 klqp <- f;
 klpq <- f;
 
 for (i in 1:n1){
-  f[i, ] <- dmvnorm(cbind(repmat(x1[i], n2, 1), x2), mu, Sigma);
-  klqp[i, ] <- dmvnorm(cbind(repmat(x1[i], n2, 1), x2), mu, SigmaKLa);
-  klpq[i, ] <- dmvnorm(cbind(repmat(x1[i], n2, 1), x2), mu, SigmaKLb);
+  f[i, ] <- dmvnorm(cbind(rep(x1[i], n2), x2), mu, Sigma);
+  klqp[i, ] <- dmvnorm(cbind(rep(x1[i], n2), x2), mu, SigmaKLa);
+  klpq[i, ] <- dmvnorm(cbind(rep(x1[i], n2), x2), mu, SigmaKLb);
 }
 
 # figure(a)

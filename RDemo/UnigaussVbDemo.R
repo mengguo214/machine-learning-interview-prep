@@ -17,167 +17,120 @@
 #    Depts. of Statistics, Virginia Tech,
 #    Hutcheson Hall, 403K, Blacksburg, VA 24061 
 #
-# Source:
-#   http://www.apps.stat.vt.edu/zhu/teaching/2016/6474/6474_2016.htm
-
 # References:
 #    https://pmtk3.googlecode.com.
 
 rm(list = ls())
 
-# generate data from true distribution
-set.seed(12234)
-mu.true <- 0
-lambda.true <- 0.8
-N <- 100
-x <- rnorm(N , mu.true, 1/lambda.true)
+# Make data with mean 0 and unit variance
+set.seed(12);
+N = 10; D = 1;
+data = runif(N);
+data = (data - mean(data)) / sd(data);
+m = mean(data);
+s = sum(data);
+data = matrix(data);
+sSq = sum(data*data);
+xbar = m;
+sigma2Hat = sSq/N - xbar^2;
 
-# initial value
-# lambda ~gamma(a0,b0)
-# mu ~ N(mu0,1/(kappa0*lambda))
-mu0 <- 0.5
-kappa0 <- 2
-a0 <- 8
-b0 <- 4
+# The true posterior model using normal gamma prior
+# hyper parameters
+a0 = 0; b0 = 0; mu0 = 0; kappa0 = 0;
+truePost = list()
+truePost$mu = mean(data);
+truePost$kappa = N;
+truePost$alpha = N/2;
+truePost$beta = 1/2*sum((data - m)^2);
 
-# specify the tolerance e
-e <- 0.01
+# Initialize VB to fit univariate gaussian
+# initial guess
+aN = 2.5; bN = 1;
+muN = 0.5; kappaN = 5;
 
-EA <- vector()
-kappa <- vector()
-b <- vector()
+# plot target distribution
+mu <- seq(-1.0 , 1.0 , by = 0.1)
+lambda <- seq(0, 2, by = 0.1)
 
-# an and mun are always the same
-an <- a0 + (N + 1)/2
-mun <- (kappa0 * mu0 + sum(x)) / (kappa0 + N)
-
-# Main loop of algorithm
-i <- 1
-# step1
-kappa[i] <- (kappa0 + N) * (a0 / b0)
-#q(mu) ~ N(mu[1],1/kappa[1])
-
-# step 2
-# EA[i] = N*(mun^2 +1/kappa[i])+sum(x^2)-2*sum(x)*mun+kappa0/kappa[i]
-EA[i] <- N * (mun^2 + 1 / kappa[i]) + sum(x^2) - 2 * sum(x) * mun + kappa0 ** (1 / kappa[i] + (mun - mu0)^2)
-b[i] <- 0.5 * EA[i] + b0
-# q(lambda)~ gamma(a[1], b[1])
-
-# i=2
-repeat{
-  # step1 
-  i <- i + 1
-  kappa[i] <- (kappa0 + N) * (an / b[i-1])  
-  #q(mu) ~ N(mu[1],1/kappa[1])
-  
-  # step 2
-  # EA[i] = N*(mun^2 +1/kappa[i])+sum(x^2)-2*sum(x)*mun+kappa0/kappa[i]
-  EA[i] <- N * (mun^2 + 1 / kappa[i]) + sum(x^2) - 2* sum(x) * mun + kappa0 * (1 / kappa[i] + (mun - mu0)^2)
-  b[i] <- 0.5 * EA[i] + b0
-  # q(lambda)~ gamma(a[1], b[1])
-  
-  if(abs(kappa[i] - kappa[i-1]) <e & abs(b[i] - b[i-1]) < e) break()
-  kappa.optimal <- kappa[i]
-  b.optimal <- b[i]
+TrueNormalGammaPdf <- function(mu, lambda){
+  muprior = truePost$mu; kappa = truePost$kappa;  
+  alpha = truePost$alpha; beta = truePost$beta;
+  C = (beta^alpha * sqrt(kappa)) / (gamma(alpha) * sqrt(2 * pi))
+  p = C * (lambda^(alpha-1/2)) * (exp(-beta * lambda)) *  
+    (exp(-kappa/2* (lambda * (mu - muprior)^2)))
+  return(p)
 }
 
+# Posterior
+vbPost <- function(mu, lambda){
+  C = (bN^aN * sqrt(kappaN)) / (gamma(aN) * sqrt(2 * pi))
+  p = C * (lambda^(aN-1/2)) * (exp(-bN * lambda)) *  
+    (exp(-kappaN/2* (lambda * (mu - muN)^2)))
+  return(p)
+}
 
-# Contour plot
-# true posterior density p(mu,lambda/x)
-f.true <- Vectorize(function(mu , lambda){
-  f <- (sqrt(lambda/2 / pi))^N *exp(-(lambda / 2) * sum((x - mu)^2)) *
-    sqrt(kappa0 * lambda / 2 /pi) * exp(-(kappa0 * lambda / 2)*(mu - mu0)^2 - b0 * lambda) * lambda^(a0 - 1)
-  #logf=N/2*log(lambda)-(lambda/2)*sum((x-mu)^2)+0.5*log(kappa0*lambda)-0.5*kappa0*lambda*(mu-mu0)^2+(a0-1)*log(lambda)-b0*lambda
-  
-  #return(logf)
-  return(f)
-})
-mu <- seq(-1.0 , 1.0 , by = 0.1)
-lambda <- seq(0.0, 2,by = 0.1)
-dens <- outer(mu, lambda, f.true)
-#logdens=outer(mu,lambda,f.true)
-#dens= exp(logdens - max(logdens))
+dens <- outer(mu, lambda, TrueNormalGammaPdf)
+
 par(mfrow = c(2, 2))
-#  Contours of the true posterior distribution f(mu,lambda/X) --green
+contour(mu, lambda, dens, 
+        xlab = 'mu', ylab = 'lambda', col = 'green', drawlabels = F)
 
-contour1<-c(1e-84, 1e-80, 1e-79, 5e-78, 1e-76)
+iter = 1;
+Lq = 0; 
+maxIter = 100;
+converged = FALSE;
+tol = 1e-5;
+Lbound = rep(NA, maxIter); Lbound[1] = Lq;
 
-
-#contours2 <- c(1.4e-100,1e-80,1e-50)
-#par(mfcol=c(1,1))
-contour(mu, lambda, dens, levels = contour1, xlab = 'mu', ylab = 'lambda', col = 'green', drawlabels = F)
-
-#(a) Contours of the initial factorized approximation q(mu)*q(lambda) --blue
-fa  <- Vectorize(function(mu, lambda){
-  #   f.a = sqrt(kappa0*lambda/2/pi)*exp(-kappa0*lambda*0.5*(mu-mu0)^2)*lambda^(a0-1)*exp(-b0*lambda)  
-  f.a <- (kappa0 * 0.5 * (mu - mu0)^2 + b0)^(-a0 - 0.5) * lambda^(a0 - 1) * exp(-b0 * lambda) 
+while ((!converged) & (iter < maxIter)) {
+  LqOld = Lq;
   
-  #  return(logfa)
-  return(f.a)
-})
-
-#logdens.a=outer(mu,lambda,fa)
-#dens.a= exp(logdens.a - max(logdens.a))
-dens.a <- outer(mu, lambda, fa)
-contour2 < -c(8e-7, 1e-7, 2e-7, 3e-7, 3.4e-7)
-
-contour(mu, lambda, dens.a, levels = contour2, xlab = 'mu', ylab = 'lambda', col = 'blue', add = T, drawlabels = F)
-legend("topleft",'(a)', bty = 'n')
-
-
-#(b) After re-estimating the factor q(mu)--blue
-fb  <- Vectorize(function(mu, lambda){
-  f.b <- sqrt(kappa[1] * 0.5 / pi) * exp(-kappa[1] / 2 * (mu - mun)^2) * lambda^(a0-1) * exp(-b0 * lambda) 
-  #  logfb=-kappa[1]*0.5*(mu-mun)^2+(a0-1)*log(lambda)-b0*lambda
+  # update q(mu)
+  elambda = aN / bN;
+  muN = (kappa0 * mu0 + N * m) / (kappa0 + N);
+  kappaN = (kappa0 + N) * elambda;
   
-  #  return(logfb)
-  return(f.b)
-})
-
-#logdens.b=outer(mu,lambda,fb)
-#dens.b= exp(logdens.b - max(logdens.b))
-dens.b <- outer(mu, lambda, fb)
-contour3 <- c(1e-4, 0.01, 0.1, 0.2)
-contour(mu, lambda, dens, levels = contour1, xlab = 'mu', ylab = 'lambda', col = 'green', drawlabels = F)
-
-contour(mu, lambda,dens.b, levels = contour3, add = T, drawlabels = F,col = 'blue')
-legend("topleft",'(b)',bty = 'n')
-
-#(c) After re-estimating the factor q(lambda)--blue
-fc <- Vectorize(function(mu, lambda){
-  f.c <- sqrt(kappa[1] / 2 / pi) * exp(-kappa[1] / 2 * (mu - mun)^2) * lambda^(an - 1) * exp(-b[1] * lambda)
-  # logfc=-kappa[1]*0.5*(mu-mun)^2+(an-1)*log(lambda)-b[1]*lambda
+  if (iter == 1){
+    dens <- outer(mu, lambda, TrueNormalGammaPdf)
+    contour(mu, lambda, dens, 
+            xlab = 'mu', ylab = 'lambda', col = 'green', drawlabels = F)
+    dens <- outer(mu, lambda, vbPost)
+    contour(mu, lambda, dens, 
+            xlab = 'mu', ylab = 'lambda', col = 'red', add = T, drawlabels = F)
+  }
   
-  #  return(logfc)
-  return(f.c)
-})
-
-#logdens.c=outer(mu,lambda,fc)
-#dens.c= exp(logdens.c - max(logdens.c))
-dens.c <- outer(mu, lambda, fc)
-contour4 <- c (1e-45, 5e-43, 1e-40, 1e-38, 1e-37, 1e-35)
-contour(mu, lambda, dens, levels = contour1, xlab = 'mu', ylab = 'lambda', col = 'green', drawlabels = F)
-
-contour(mu, lambda, dens.c, levels = contour4, add = T, drawlabels = F, col = 'blue')
-legend("topleft",'(c)',bty = 'n')
-
-
-#(d) Contours of the optimal factorized approximation--red 
-fd <- Vectorize(function(mu, lambda){
-  f.d <- sqrt(kappa.optimal / 2/ pi) * exp(-kappa.optimal / 2*(mu - mun)^2) * lambda^(an - 1) * exp(-b.optimal * lambda)
-  #logfd=-kappa.optimal*0.5*(mu-mun)^2+(an-1)*log(lambda)-b.optimal*lambda
+  # update q(lambda)
+  emu = muN;
+  emuSquare = 1/kappaN + muN^2;
+  aN = a0 + (N+1)/2;
+  bN = b0 + 1/2 * ((sSq + kappa0 * mu0^2) - 2 * emu *(s + kappa0 * mu0) + emuSquare*(kappa0+N));
+  if (iter == 1){
+    dens <- outer(mu, lambda, TrueNormalGammaPdf)
+    contour(mu, lambda, dens, 
+            xlab = 'mu', ylab = 'lambda', col = 'green', drawlabels = F)
+    dens <- outer(mu, lambda, vbPost)
+    contour(mu, lambda, dens, 
+            xlab = 'mu', ylab = 'lambda', col = 'red', add = T, drawlabels = F)
+  }
   
-  #return(logfd)
-  return(f.d)
-})
+  Lq = 1/2 * log(1/kappaN) + log(gamma(aN)) - aN * log(bN);
+  Lbound[iter] = Lq;
+  if (iter > 1){
+    if (Lq - LqOld < -tol){
+      cat('Lq did not increase, iter =', iter, "\n");
+    } else if (abs(Lq - LqOld) < tol){
+      converged = TRUE;
+    }
+  }
+  
+  iter = iter + 1;
+  
+}
 
-#logdens.d=outer(mu,lambda,fd)
-#dens.d= exp(logdens.d - max(logdens.d))
-dens.d <- outer(mu, lambda, fd)
-
-contour5 <- c(5e-43, 1e-40, 1e-38, 1e-37, 1e-35)
-contour(mu, lambda, dens, levels = contour1, xlab = 'mu', ylab = 'lambda',col = 'green', drawlabels = F)
-
-contour(mu, lambda, dens.d, levels = contour5, add = T, drawlabels = F, col = 'red')
-legend("topleft",'(d)', bty = 'n')
-
+cat('Total # of iterations:', iter, "\n");
+dens <- outer(mu, lambda, TrueNormalGammaPdf)
+contour(mu, lambda, dens, 
+        xlab = 'mu', ylab = 'lambda', col = 'green', drawlabels = F)
+dens <- outer(mu, lambda, vbPost)
+contour(mu, lambda, dens, 
+        xlab = 'mu', ylab = 'lambda', col = 'red', add = T, drawlabels = F)
