@@ -361,6 +361,7 @@
 - [数据科学家的product sense哪里来Case Studies](http://www.1point3acres.com/bbs/thread-111681-1-1.html)
 
 ## :exclamation: Leetcode
+- [数据结构与算法/leetcode/lintcode题解](https://github.com/billryan/algorithm-exercise)
 - [yuzhoujr](https://github.com/yuzhoujr/leetcode/blob/master/tree/Yu/107.py)
 - [LeetCode](https://leetcode.com/problemset/all/)
 - [Edward Shi](https://www.youtube.com/channel/UCTWuRL33U8xBPqk3LehXjFw)
