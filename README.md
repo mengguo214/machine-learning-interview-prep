@@ -343,7 +343,6 @@
 - [mitbbs](https://www.mitbbs.com/mwap/forum/article.php?board=JobHunting&groupid=32808273&content_type=all)
 - [Basic Select Challenges](https://www.hackerrank.com/domains/sql/select)
 - [Data scientist / Machine Learning Engineer 相关面试题](https://www.mitbbs.com/article_t/JobHunting/32808273.html)
-- [:apple: 120 Data Science Interview Questions](https://github.com/kojino/120-Data-Science-Interview-Questions)
 - [每日一练 | Data Scientist & Business Analyst 面试题](http://weixin.sogou.com/weixin?type=2&s_from=input&query=Data+Scientist+%26+Business+Analyst+%E9%9D%A2%E8%AF%95%E9%A2%98+103&ie=utf8&_sug_=n&_sug_type_=&w=01019900&sut=159&sst0=1523543231745&lkt=2%2C1523543231587%2C1523543231643)
 - [一亩三分地](http://www.1point3acres.com/bbs/forum-259-1.html)
 - [Glassdoor](https://www.glassdoor.com/Interview/Google-Quantitative-Analyst-Interview-Questions-EI_IE9079.0,6_KO7,27.htm)
@@ -354,12 +353,13 @@
 - [109个Data Scientist必备面试问题](https://mp.weixin.qq.com/s/iag46dB1Fv15G88YAJCJ5g)
 - [Learn Data Science](https://datascienceinterview.quora.com/)
 - [LinkedIn sde ml track新鲜面经](http://www.1point3acres.com/bbs/thread-207323-1-1.html)
-- [Mockinterview](http://mockinterview.co/)
 - [Collection of Machine Learning Interview Questions](http://analyticscosm.com/machine-learning-interview-questions-for-data-scientist-interview/)
 - [牛客](https://www.nowcoder.com)
 - [一个“水博”的机器学习算法面经：腾讯，阿里，网易](https://zhuanlan.zhihu.com/p/35883543)
 - [苹果、谷歌等大厂的AI面试题被我们搞到手了，你敢来挑战吗？](https://mp.weixin.qq.com/s?__biz=MzU1NDA4NjU2MA==&mid=2247489971&idx=1&sn=f9b023413f17576c0e859e1f12c3c5fb&chksm=fbe9a07ccc9e296a24891063cb92c4ecbdee984985f9c9afcc1691748d7ea4c483bd96dc5540&mpshare=1&scene=43&srcid=0423b8ufZIndeoMqhzddQntf#rd)
-- [数据科学家的product sense哪里来Case Studies](http://www.1point3acres.com/bbs/thread-111681-1-1.html)
+- [* 数据科学家的product sense哪里来Case Studies](http://www.1point3acres.com/bbs/thread-111681-1-1.html)
+- [* Mockinterview](http://mockinterview.co/)
+- [* 120 Data Science Interview Questions](https://github.com/kojino/120-Data-Science-Interview-Questions)
 
 ## :exclamation: Leetcode
 - [geeksforgeeks](https://www.geeksforgeeks.org/)
